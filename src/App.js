@@ -1,10 +1,12 @@
 import React, { useEffect, useState } from 'react';
 import AdUnit from './components/AdUnit';
 import PrebidManager from './components/PrebidManager';
+import OpenAIPrompt from './components/OpenAIPrompt';
 import './App.css';
 
 function App() {
   const [prebidReady, setPrebidReady] = useState(false);
+  const [aiResponse, setAiResponse] = useState('');
 
   useEffect(() => {
     // Initialize Prebid when component mounts
@@ -13,21 +15,31 @@ function App() {
     });
   }, []);
 
+  // This function handles AI responses
+  const handleAIResponse = (response) => {
+    setAiResponse(response);
+    console.log('AI Response received:', response);
+  };
+
   return (
     <div className="App">
       <header className="App-header">
-        <h1>🚀 Prebid React App</h1>
-        <p>A demonstration of Prebid.js integration with React</p>
+        <h1>🚀 Prebid React App with AI Integration</h1>
+        <p>A demonstration of Prebid.js integration with OpenAI</p>
       </header>
       
       <main className="App-main">
         <section className="content-section">
-          <h2>Welcome to our Ad-Enabled Website!</h2>
+          <h2>Welcome to our AI-Enhanced Ad Platform!</h2>
           <p>
             This is a sample React application that demonstrates how to integrate 
-            Prebid.js for header bidding. The ads below are configured with test 
-            bidders to show how the integration works.
+            Prebid.js for header bidding with AI capabilities. Ask the AI assistant 
+            questions about advertising and technology.
           </p>
+        </section>
+
+        <section className="ai-section">
+          <OpenAIPrompt onResponse={handleAIResponse} />
         </section>
 
         <section className="ad-section">
@@ -69,6 +81,7 @@ function App() {
           <h2>Features</h2>
           <ul>
             <li>✅ Prebid.js integration for header bidding</li>
+            <li>✅ OpenAI-powered AI assistant</li>
             <li>✅ React components for ad management</li>
             <li>✅ Responsive ad units</li>
             <li>✅ Test bidder configuration</li>
@@ -78,7 +91,7 @@ function App() {
       </main>
 
       <footer className="App-footer">
-        <p>© 2024 Prebid React Demo App</p>
+        <p>© 2024 Prebid React Demo App with AI Integration</p>
       </footer>
     </div>
   );
