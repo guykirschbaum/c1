@@ -1,17 +1,24 @@
 import React, { useEffect, useState } from 'react';
 import AdUnit from './components/AdUnit';
+import StandaloneAdUnit from './components/StandaloneAdUnit';
 import PrebidManager from './components/PrebidManager';
+import AdServerManager from './components/AdServerManager';
 import OpenAIPrompt from './components/OpenAIPrompt';
 import './App.css';
 
 function App() {
   const [prebidReady, setPrebidReady] = useState(false);
+  const [adServerReady, setAdServerReady] = useState(false);
   const [aiResponse, setAiResponse] = useState('');
 
   useEffect(() => {
-    // Initialize Prebid when component mounts
+    // Initialize both Prebid and standalone ad server
     PrebidManager.init(() => {
       setPrebidReady(true);
+    });
+    
+    AdServerManager.init(() => {
+      setAdServerReady(true);
     });
   }, []);
 
@@ -43,10 +50,23 @@ function App() {
         </section>
 
         <section className="ad-section">
-          <h3>Advertisement</h3>
+          <h3>Prebid.js Advertisement</h3>
           {prebidReady ? (
             <AdUnit 
               adUnitCode="div-gpt-ad-1234567890-0"
+              sizes={[[300, 250], [320, 50]]}
+              title="Banner Ad"
+            />
+          ) : (
+            <div className="ad-placeholder">Loading advertisement...</div>
+          )}
+        </section>
+
+        <section className="ad-section">
+          <h3>Standalone Ad Server Advertisement</h3>
+          {adServerReady ? (
+            <StandaloneAdUnit 
+              adUnitCode="standalone-ad-1"
               sizes={[[300, 250], [320, 50]]}
               title="Banner Ad"
             />
@@ -65,10 +85,23 @@ function App() {
         </section>
 
         <section className="ad-section">
-          <h3>Sidebar Advertisement</h3>
+          <h3>Prebid.js Leaderboard Advertisement</h3>
           {prebidReady ? (
             <AdUnit 
               adUnitCode="div-gpt-ad-1234567890-1"
+              sizes={[[728, 90], [320, 50]]}
+              title="Leaderboard Ad"
+            />
+          ) : (
+            <div className="ad-placeholder">Loading advertisement...</div>
+          )}
+        </section>
+
+        <section className="ad-section">
+          <h3>Standalone Ad Server Leaderboard</h3>
+          {adServerReady ? (
+            <StandaloneAdUnit 
+              adUnitCode="standalone-ad-2"
               sizes={[[728, 90], [320, 50]]}
               title="Leaderboard Ad"
             />
@@ -81,6 +114,7 @@ function App() {
           <h2>Features</h2>
           <ul>
             <li>✅ Prebid.js integration for header bidding</li>
+            <li>✅ Standalone ad server integration</li>
             <li>✅ OpenAI-powered AI assistant</li>
             <li>✅ React components for ad management</li>
             <li>✅ Responsive ad units</li>

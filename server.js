@@ -13,6 +13,90 @@ app.use(express.json());
 // Serve static files from the dist directory
 app.use(express.static(path.join(__dirname, 'dist')));
 
+// Standalone Ad Server endpoints
+app.post('/api/ads', (req, res) => {
+  try {
+    const { adUnitCode, sizes, targeting } = req.body;
+    
+    console.log('Ad request received:', { adUnitCode, sizes, targeting });
+    
+    // Simulate ad server response
+    const adResponse = {
+      success: true,
+      adUnitCode: adUnitCode,
+      adHtml: `
+        <div style="
+          background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+          color: white;
+          padding: 20px;
+          text-align: center;
+          border-radius: 8px;
+          font-family: Arial, sans-serif;
+          width: ${sizes[0][0] - 40}px;
+          height: ${sizes[0][1] - 40}px;
+          display: flex;
+          flex-direction: column;
+          justify-content: center;
+          margin: 0 auto;
+          box-shadow: 0 4px 8px rgba(0,0,0,0.1);
+        ">
+          <h3 style="margin: 0 0 10px 0; font-size: 18px;">🎯 Server-Side Ad</h3>
+          <p style="margin: 0 0 15px 0; font-size: 14px; opacity: 0.9;">
+            Served by Express.js Ad Server
+          </p>
+          <div style="
+            background: rgba(255,255,255,0.2);
+            padding: 8px;
+            border-radius: 4px;
+            font-size: 12px;
+          ">
+            Ad Unit: ${adUnitCode}
+          </div>
+        </div>
+      `,
+      adType: 'banner',
+      sizes: sizes,
+      timestamp: Date.now(),
+      cpm: (Math.random() * 5 + 1).toFixed(2),
+      currency: 'USD'
+    };
+    
+    // Simulate network delay
+    setTimeout(() => {
+      res.json(adResponse);
+    }, Math.random() * 500 + 200);
+    
+  } catch (error) {
+    console.error('Ad server error:', error);
+    res.status(500).json({ 
+      error: 'Ad server request failed',
+      details: error.message 
+    });
+  }
+});
+
+app.get('/api/ads/config', (req, res) => {
+  res.json({
+    success: true,
+    adServerUrl: process.env.AD_SERVER_URL || 'http://localhost:3000/api/ads',
+    publisherId: process.env.PUBLISHER_ID || 'demo-publisher',
+    availableAdUnits: [
+      {
+        code: 'standalone-ad-1',
+        sizes: [[300, 250], [320, 50]],
+        title: 'Banner Ad',
+        type: 'banner'
+      },
+      {
+        code: 'standalone-ad-2',
+        sizes: [[728, 90], [320, 50]],
+        title: 'Leaderboard Ad',
+        type: 'banner'
+      }
+    ]
+  });
+});
+
 // OpenAI API endpoint
 app.post('/api/openai', async (req, res) => {
   try {

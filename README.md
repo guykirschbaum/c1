@@ -5,6 +5,7 @@ A Node.js project demonstrating Prebid.js integration with a React.js web applic
 ## 🚀 Features
 
 - **Prebid.js Integration**: Complete header bidding setup with test bidders
+- **Standalone Ad Server**: Custom ad server implementation with Express.js backend
 - **React Components**: Modular ad unit components for easy integration
 - **Real-time Bidding**: Demonstrates auction mechanics and bid responses
 - **Responsive Design**: Modern, mobile-friendly UI
@@ -27,7 +28,9 @@ prebid-react-app/
 │   ├── App.css                # Application styles
 │   └── components/
 │       ├── PrebidManager.js   # Prebid configuration and utilities
-│       └── AdUnit.js          # Individual ad unit component
+│       ├── AdUnit.js          # Individual ad unit component
+│       ├── AdServerManager.js # Standalone ad server manager
+│       └── StandaloneAdUnit.js # Standalone ad unit component
 └── README.md                  # This file
 ```
 
@@ -72,9 +75,9 @@ npm start
 - Starts Express server on `http://localhost:3000`
 - Serves static files from `dist/` directory
 
-## 🎯 Prebid Integration
+## 🎯 Ad Server Integration
 
-### Configuration
+### Prebid.js Integration
 The Prebid integration is configured in `src/components/PrebidManager.js` with:
 
 - **Test Bidders**: AppNexus and Rubicon Project
@@ -82,7 +85,7 @@ The Prebid integration is configured in `src/components/PrebidManager.js` with:
 - **Debug Mode**: Enabled for testing and development
 - **Timeout**: 3-second bidder timeout
 
-### Ad Units
+### Prebid Ad Units
 Two ad units are configured:
 
 1. **Banner Ad** (`div-gpt-ad-1234567890-0`)
@@ -92,6 +95,25 @@ Two ad units are configured:
 2. **Leaderboard Ad** (`div-gpt-ad-1234567890-1`)
    - Sizes: 728x90, 320x50
    - Bidders: AppNexus, Rubicon
+
+### Standalone Ad Server
+The standalone ad server is implemented in `src/components/AdServerManager.js` with:
+
+- **Custom Ad Server**: Express.js backend serving ads
+- **Ad Units**: Two standalone ad placements
+- **Real-time Ad Serving**: Server-side ad generation
+- **Fallback Support**: Mock ads when server is unavailable
+
+### Standalone Ad Units
+Two standalone ad units are configured:
+
+1. **Banner Ad** (`standalone-ad-1`)
+   - Sizes: 300x250, 320x50
+   - Type: Banner
+
+2. **Leaderboard Ad** (`standalone-ad-2`)
+   - Sizes: 728x90, 320x50
+   - Type: Banner
 
 ### Components
 
@@ -106,6 +128,18 @@ Two ad units are configured:
 - Manages loading states and bid information
 - Displays winning bid details
 - Handles ad rendering
+
+#### AdServerManager
+- Manages standalone ad server integration
+- Handles ad requests to Express.js backend
+- Provides fallback ad generation
+- Manages ad unit configuration
+
+#### StandaloneAdUnit
+- React component for standalone ad placements
+- Manages loading states and ad information
+- Displays ad server details
+- Handles standalone ad rendering
 
 ## 🔧 Customization
 
@@ -128,6 +162,18 @@ Edit `src/components/PrebidManager.js` and add bidder configuration:
 ```jsx
 <AdUnit 
   adUnitCode="your-ad-unit-code"
+  sizes={[[width, height]]}
+  title="Your Ad Title"
+/>
+```
+
+### Adding New Standalone Ad Units
+1. Add configuration to the `adUnitConfigs` array in `AdServerManager.js`
+2. Use the `StandaloneAdUnit` component in your React application:
+
+```jsx
+<StandaloneAdUnit 
+  adUnitCode="your-standalone-ad-code"
   sizes={[[width, height]]}
   title="Your Ad Title"
 />

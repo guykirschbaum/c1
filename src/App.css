@@ -141,3 +141,23 @@
   position: relative;
   min-height: 100px;
 }
+
+/* Standalone Ad Unit Styles */
+.standalone-ad-unit-container {
+  display: inline-block;
+  margin: 1rem auto;
+  background: white;
+  border: 1px solid #007bff;
+  border-radius: 4px;
+  overflow: hidden;
+  box-shadow: 0 2px 8px rgba(0,123,255,0.1);
+}
+
+.standalone-ad-unit-container .ad-unit-title {
+  background: #007bff;
+  color: white;
+  padding: 0.5rem 1rem;
+  font-size: 0.9rem;
+  border-bottom: 1px solid #0056b3;
+  margin: 0;
+}
