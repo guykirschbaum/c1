@@ -28,7 +28,6 @@ body, .App {
 }
 
 .banner-ad {
-  width: 100vw;
   min-height: 70px;
   background: linear-gradient(90deg, #e3eafc 0%, #c5cae9 100%);
   color: #1a237e;
@@ -41,12 +40,71 @@ body, .App {
   box-shadow: 0 2px 8px rgba(26,35,126,0.07);
   margin-bottom: 0.5rem;
 }
+
+:root {
+  --banner-box-height: 120px;
+  --banner-box-padding: 2rem 2rem 1.5rem 2rem;
+  --banner-box-radius: 10px;
+}
+
+.top-banner,
+.academic-search-box {
+  max-width: 600px;
+  width: 100%;
+  min-height: var(--banner-box-height);
+  padding: var(--banner-box-padding);
+  border-radius: var(--banner-box-radius);
+  box-sizing: border-box;
+  display: flex;
+  align-items: center;
+  margin: 2rem auto 0.5rem auto;
+}
+
 .top-banner {
   border-bottom: 2px solid #3949ab;
+  background: linear-gradient(90deg, #e3eafc 0%, #c5cae9 100%);
+  max-width: 600px;
+  width: 100%;
+  min-height: var(--banner-box-height);
+  padding: var(--banner-box-padding);
+  margin: 2rem auto 0.5rem auto;
+  border-radius: var(--banner-box-radius);
+  box-sizing: border-box;
+  display: flex;
+  align-items: center;
+  justify-content: center;
 }
+
+.academic-search-box {
+  width: 100%;
+  max-width: 600px;
+  background: #fff;
+  border-radius: 10px;
+  box-shadow: 0 2px 12px rgba(26,35,126,0.07);
+  padding: 1.5rem 2rem 1.2rem 2rem;
+  margin: 0 auto 2rem auto;
+  border: 1px solid #e3eafc;
+  box-sizing: border-box;
+  display: flex;
+  flex-direction: column;
+  align-items: stretch;
+}
+
+/* Remove extra margin/padding from children */
+.top-banner > *, .academic-search-box > * {
+  margin: 0;
+  padding: 0;
+  width: 100%;
+}
+
 .bottom-banner {
   border-top: 2px solid #3949ab;
   margin-top: 2rem;
+  width: 100vw;
+  left: 50%;
+  right: 50%;
+  transform: translateX(-50%);
+  position: relative;
 }
 
 .App-main {
@@ -63,17 +121,6 @@ body, .App {
   display: flex;
   flex-direction: column;
   align-items: center;
-}
-
-.academic-search-box {
-  width: 100%;
-  max-width: 600px;
-  background: #fff;
-  border-radius: 10px;
-  box-shadow: 0 2px 12px rgba(26,35,126,0.07);
-  padding: 2rem 2rem 1.5rem 2rem;
-  margin: 0 auto;
-  border: 1px solid #e3eafc;
 }
 
 .search-label {
@@ -93,7 +140,7 @@ body, .App {
 
 .input-group {
   display: flex;
-  align-items: center;
+  align-items: stretch;
   gap: 1rem;
 }
 
@@ -108,6 +155,8 @@ body, .App {
   color: #222;
   font-family: 'Merriweather', Georgia, serif;
   transition: border 0.2s;
+  height: 48px;
+  box-sizing: border-box;
 }
 .prompt-input.academic-input:focus {
   border: 1.5px solid #3949ab;
@@ -126,10 +175,13 @@ body, .App {
   font-weight: 700;
   border: none;
   border-radius: 6px;
-  padding: 0.9rem 1.7rem;
+  padding: 0 1.7rem;
   cursor: pointer;
   transition: background 0.2s, box-shadow 0.2s;
   box-shadow: 0 2px 8px rgba(26,35,126,0.08);
+  height: 48px;
+  display: flex;
+  align-items: center;
 }
 .submit-button.academic-search-btn:disabled {
   background: #b0bec5;
