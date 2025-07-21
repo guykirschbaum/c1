@@ -1,0 +1,32 @@
+<!doctype html><html lang="en"><head><meta charset="UTF-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>Prebid React App</title><script async src="https://cdn.jsdelivr.net/npm/prebid.js@7.25.0/dist/prebid.js"></script><script async src="https://app.koah.ai/js?token=719dbff7-8ba3-4843-a4e2-c3865b3f294b"></script><script>// Fallback if Prebid.js fails to load
+        setTimeout(() => {
+            if (typeof window.pbjs === 'undefined') {
+                console.warn('Prebid.js failed to load from CDN, using fallback');
+                window.pbjs = {
+                    que: [],
+                    setConfig: () => {},
+                    addAdUnits: () => {},
+                    requestBids: () => {},
+                    getHighestCpmBids: () => [],
+                    renderAd: () => {}
+                };
+            }
+        }, 3000);</script><style>body {
+            margin: 0;
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Roboto', 'Oxygen',
+                'Ubuntu', 'Cantarell', 'Fira Sans', 'Droid Sans', 'Helvetica Neue',
+                sans-serif;
+            -webkit-font-smoothing: antialiased;
+            -moz-osx-font-smoothing: grayscale;
+            background-color: #f5f5f5;
+        }
+        
+        .ad-container {
+            border: 2px dashed #ccc;
+            background-color: #f9f9f9;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            min-height: 250px;
+            margin: 20px 0;
+        }</style><script defer="defer" src="bundle.js"></script></head><body><div id="root"></div></body></html>

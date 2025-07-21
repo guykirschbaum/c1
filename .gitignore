@@ -1,0 +1,11 @@
+# Elastic Beanstalk Files
+.elasticbeanstalk/*
+!.elasticbeanstalk/*.cfg.yml
+!.elasticbeanstalk/*.global.yml
+
+# Custom ignore
+some_ignore
+
+# Environment variables
+.env
+.env.*

@@ -1,0 +1,6 @@
+﻿{
+    "region":  "us-east-1",
+    "applicationName":  "prebid-react-app",
+    "environmentName":  "e-kx9rec43mp",
+    "s3Bucket":  "prebid-react-app-deployments"
+}
