@@ -30,7 +30,7 @@ const OpenAIPrompt = ({ onResponse, placeholder, label }) => {
       if (data.success) {
         setResponse(data.response);
         if (onResponse) {
-          onResponse(data.response);
+          onResponse(data.response, prompt);
         }
       } else {
         setError(data.error || 'Failed to get response');

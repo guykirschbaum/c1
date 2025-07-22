@@ -34,19 +34,31 @@ function App() {
   const [aiArticle, setAiArticle] = useState(null);
 
   useEffect(() => {
+    // Inject Koha AI script if not already present
+    const scriptId = 'koha-ai-sdk';
+    if (!document.getElementById(scriptId)) {
+      const script = document.createElement('script');
+      script.id = scriptId;
+      script.async = true;
+      script.src = 'https://app.koah.ai/js?token=719dbff7-8ba3-4843-a4e2-c3865b3f294b';
+      document.head.appendChild(script);
+    }
     PrebidManager.init(() => {});
   }, []);
 
   // Handle search (AI response)
-  const handleSearch = (response) => {
+  const handleSearch = (aiResponse, searchQuery) => {
     setAiArticle({
       title: 'AI-Generated Article',
       authors: 'AI Assistant',
       journal: 'AI Response',
       year: new Date().getFullYear(),
-      abstract: response
+      abstract: aiResponse
     });
     setResults(mockResults);
+    if (window.koah && typeof window.koah.process === 'function') {
+      window.koah.process(searchQuery, aiResponse, 'prefix');
+    }
   };
 
   return (
@@ -103,6 +115,8 @@ function App() {
       <div className="banner-ad bottom-banner">
         <AdUnit adUnitCode="bottom-banner" sizes={[[970, 250], [970, 90], [728, 90], [468, 60], [320, 50]]} title="Bottom Banner Ad" />
       </div>
+
+      <div className="c1-ad1"></div>
 
       <footer className="App-footer">
         <p>© 2024 Academic Search Engine. Powered by AI.</p>
