@@ -40,7 +40,7 @@ function App() {
       const script = document.createElement('script');
       script.id = scriptId;
       script.async = true;
-      script.src = 'https://app.koah.ai/js?token=719dbff7-8ba3-4843-a4e2-c3865b3f294b';
+      script.src = 'https://app.koah.ai/js?token=a48a6dd8-d39a-4868-a0cc-e7bdd87c97f1';
       document.head.appendChild(script);
     }
     PrebidManager.init(() => {});
@@ -116,7 +116,12 @@ function App() {
         <AdUnit adUnitCode="bottom-banner" sizes={[[970, 250], [970, 90], [728, 90], [468, 60], [320, 50]]} title="Bottom Banner Ad" />
       </div>
 
-      <div className="c1-ad1"></div>
+      <div className="c1-ad1">
+        <div className="koha-banner-content">
+          <h3>Powered by Koha AI</h3>
+          <p>Advanced AI-powered academic search and analysis</p>
+        </div>
+      </div>
 
       <footer className="App-footer">
         <p>© 2024 Academic Search Engine. Powered by AI.</p>
