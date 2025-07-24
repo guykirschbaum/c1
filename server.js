@@ -15,8 +15,19 @@ app.use(express.static(path.join(__dirname, 'dist')));
 
 // Standalone Ad Server endpoints
 app.post('/api/ads', (req, res) => {
+  console.log('[/api/ads] endpoint called with body:', req.body);
   try {
     const { adUnitCode, sizes, targeting } = req.body;
+    if (adUnitCode === 'top-banner') {
+      // Simulate waterfall: always return direct ad for demo
+      return res.json({
+        success: true,
+        adUnitCode,
+        adHtml: `<div style="background:#3949ab;color:#fff;padding:20px;text-align:center;font-size:1.5rem;">My Direct SSP Ad - $2.50 CPM</div>`,
+        cpm: 2.50,
+        currency: 'USD'
+      });
+    }
     
     console.log('Ad request received:', { adUnitCode, sizes, targeting });
     
@@ -158,7 +169,18 @@ app.post('/api/openai', async (req, res) => {
   }
 });
 
-
+// SSP Demo endpoint for direct ad
+app.get('/ssp-demo', (req, res) => {
+  res.json({
+    ad: '<div style="background:#3949ab;color:#fff;padding:20px;text-align:center;font-size:1.5rem;">Your Direct Demo Ad Here!</div>',
+    cpm: 100,
+    width: 728,
+    height: 90,
+    creativeId: 'demo-creative-1',
+    currency: 'USD',
+    requestId: req.query.requestId || 'demo-request'
+  });
+});
 
 // Handle React routing, return all requests to React app
 app.get('*', (req, res) => {

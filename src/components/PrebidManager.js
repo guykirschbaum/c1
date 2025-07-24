@@ -3,6 +3,7 @@ class PrebidManager {
   static isInitialized = false;
 
   static init(callback) {
+    console.log('PrebidManager.init() called');
     if (this.isInitialized) {
       console.log('PrebidManager already initialized');
       callback();
@@ -11,19 +12,19 @@ class PrebidManager {
 
     console.log('PrebidManager.init() called');
     
-    // Wait for Prebid to be available with timeout
+    // Wait for Prebid to be available with longer timeout for async loading
     let attempts = 0;
-    const maxAttempts = 50; // 5 seconds max wait
+    const maxAttempts = 100; // 10 seconds max wait for async loading
     
     const checkPrebid = () => {
       attempts++;
       console.log(`Prebid check attempt ${attempts}/${maxAttempts}, pbjs available:`, typeof window.pbjs !== 'undefined');
       
-      if (window.pbjs && window.pbjs.que) {
-        console.log('Prebid.js found, setting up...');
+      if (window.pbjs && window.pbjs.que && typeof window.pbjs.que.push === 'function') {
+        console.log('Prebid.js found and ready, setting up...');
         this.setupPrebid(callback);
       } else if (attempts >= maxAttempts) {
-        console.warn('Prebid.js failed to load, using fallback mode');
+        console.warn('Prebid.js failed to load or not ready after 10 seconds, using fallback mode');
         this.setupFallbackMode(callback);
       } else {
         setTimeout(checkPrebid, 100);
@@ -37,10 +38,12 @@ class PrebidManager {
     console.log('Setting up Prebid.js...');
     
     try {
+      console.log('About to push to pbjs.que...');
       window.pbjs.que.push(() => {
-        // Configure Prebid
+        console.log('Inside pbjs.que.push callback - starting setup...');
+        // Only use the prebidServer bidder for the top-banner
         window.pbjs.setConfig({
-          debug: true, // Enable debug mode for testing
+          debug: true,
           bidderTimeout: 3000,
           enableSendAllBids: true,
           userSync: {
@@ -51,7 +54,6 @@ class PrebidManager {
           }
         });
 
-        // Define ad units with test bidders
         const adUnits = [
           {
             code: 'top-banner',
@@ -62,17 +64,9 @@ class PrebidManager {
             },
             bids: [
               {
-                bidder: 'appnexus',
+                bidder: 'prebidServer',
                 params: {
-                  placementId: 13144370 // Test placement ID
-                }
-              },
-              {
-                bidder: 'rubicon',
-                params: {
-                  accountId: 14062,
-                  siteId: 70608,
-                  zoneId: 335918
+                  endpoint: 'http://localhost:3000/ssp-demo'
                 }
               }
             ]
@@ -154,9 +148,12 @@ class PrebidManager {
         // Add ad units to Prebid
         console.log('Adding ad units to Prebid...');
         window.pbjs.addAdUnits(adUnits);
+        console.log('Ad units added successfully');
 
         // Set up Google Publisher Tag (GPT) integration
+        console.log('Setting up GPT...');
         this.setupGPT();
+        console.log('GPT setup completed');
 
         console.log('Prebid.js setup completed successfully');
         this.isInitialized = true;
