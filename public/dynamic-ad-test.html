@@ -1,0 +1,282 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Dynamic Ad Loading Test</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 20px;
+            background-color: #f5f5f5;
+        }
+        .container {
+            background: white;
+            padding: 20px;
+            border-radius: 8px;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+        }
+        .form-section {
+            background: #f8f9fa;
+            padding: 20px;
+            border-radius: 8px;
+            margin-bottom: 20px;
+            border-left: 4px solid #007bff;
+        }
+        .ad-preview {
+            background: #e9ecef;
+            padding: 20px;
+            border-radius: 8px;
+            margin: 20px 0;
+            text-align: center;
+        }
+        .form-group {
+            margin-bottom: 15px;
+        }
+        label {
+            display: block;
+            margin-bottom: 5px;
+            font-weight: bold;
+        }
+        input, select {
+            width: 100%;
+            padding: 10px;
+            border: 1px solid #ddd;
+            border-radius: 4px;
+            font-size: 14px;
+        }
+        button {
+            background: #007bff;
+            color: white;
+            border: none;
+            padding: 12px 24px;
+            border-radius: 4px;
+            cursor: pointer;
+            font-size: 16px;
+            margin: 5px;
+        }
+        button:hover {
+            background: #0056b3;
+        }
+        .success {
+            color: #28a745;
+        }
+        .error {
+            color: #dc3545;
+        }
+        .examples {
+            background: #fff3cd;
+            padding: 15px;
+            border-radius: 4px;
+            margin: 10px 0;
+        }
+        .example-btn {
+            background: #ffc107;
+            color: #212529;
+            border: none;
+            padding: 5px 10px;
+            border-radius: 4px;
+            cursor: pointer;
+            margin: 2px;
+            font-size: 12px;
+        }
+        .example-btn:hover {
+            background: #e0a800;
+        }
+        .ad-container {
+            margin: 20px 0;
+            padding: 20px;
+            background: white;
+            border-radius: 8px;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+        }
+        .response-info {
+            background: #f8f9fa;
+            padding: 15px;
+            border-radius: 4px;
+            margin: 10px 0;
+            font-family: monospace;
+            font-size: 12px;
+            white-space: pre-wrap;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>🎯 Dynamic Ad Loading Test</h1>
+        <p>Test the dynamic ad loading API that creates ads based on context input.</p>
+        
+        <div class="form-section">
+            <h3>Load Dynamic Ad</h3>
+            
+            <div class="form-group">
+                <label for="context">Context (required):</label>
+                <input type="text" id="context" placeholder="e.g., technology innovation, health wellness, fashion sale" value="technology innovation">
+            </div>
+            
+            <div class="form-group">
+                <label for="adType">Ad Type:</label>
+                <select id="adType">
+                    <option value="banner">Banner</option>
+                    <option value="rectangle">Rectangle</option>
+                    <option value="leaderboard">Leaderboard</option>
+                </select>
+            </div>
+            
+            <div class="form-group">
+                <label for="width">Width (px):</label>
+                <input type="number" id="width" value="728" min="200" max="1200">
+            </div>
+            
+            <div class="form-group">
+                <label for="height">Height (px):</label>
+                <input type="number" id="height" value="90" min="50" max="600">
+            </div>
+            
+            <button onclick="generateAd()">Load Ad</button>
+            <button onclick="clearAd()">Clear</button>
+        </div>
+        
+        <div class="examples">
+            <h4>Quick Examples:</h4>
+            <button class="example-btn" onclick="setExample('technology innovation')">🚀 Technology</button>
+            <button class="example-btn" onclick="setExample('health wellness')">🏥 Health</button>
+            <button class="example-btn" onclick="setExample('fashion sale discount')">👗 Fashion Sale</button>
+            <button class="example-btn" onclick="setExample('finance investment')">💰 Finance</button>
+            <button class="example-btn" onclick="setExample('sports football')">⚽ Sports</button>
+            <button class="example-btn" onclick="setExample('travel vacation')">✈️ Travel</button>
+            <button class="example-btn" onclick="setExample('education learning')">📚 Education</button>
+            <button class="example-btn" onclick="setExample('food restaurant')">🍕 Food</button>
+        </div>
+        
+        <div id="ad-preview" class="ad-preview" style="display: none;">
+            <h3>Generated Ad Preview</h3>
+            <div id="ad-content"></div>
+        </div>
+        
+        <div id="response-info" class="response-info" style="display: none;">
+            <h4>API Response:</h4>
+            <div id="response-content"></div>
+        </div>
+    </div>
+
+    <script>
+        async function generateAd() {
+            const context = document.getElementById('context').value;
+            const adType = document.getElementById('adType').value;
+            const width = parseInt(document.getElementById('width').value);
+            const height = parseInt(document.getElementById('height').value);
+            
+            if (!context) {
+                alert('Please enter a context');
+                return;
+            }
+            
+            const adPreview = document.getElementById('ad-preview');
+            const adContent = document.getElementById('ad-content');
+            const responseInfo = document.getElementById('response-info');
+            const responseContent = document.getElementById('response-content');
+            
+            adPreview.style.display = 'block';
+            adContent.innerHTML = 'Loading ad...';
+            responseInfo.style.display = 'none';
+            
+            try {
+                                 const response = await fetch('http://localhost:3000/api/load-ad', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json',
+                    },
+                    body: JSON.stringify({
+                        context: context,
+                        adType: adType,
+                        width: width,
+                        height: height
+                    })
+                });
+                
+                const data = await response.json();
+                
+                                 if (data.success) {
+                     // Create native ad display
+                     const nativeAd = data.nativeAd;
+                     const adHtml = `
+                         <div style="
+                             background: white;
+                             border: 1px solid #ddd;
+                             border-radius: 8px;
+                             padding: 20px;
+                             max-width: ${nativeAd.dimensions.width}px;
+                             font-family: Arial, sans-serif;
+                             box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+                         ">
+                             <div style="display: flex; align-items: center; margin-bottom: 15px;">
+                                 <img src="${nativeAd.icon.url}" alt="${nativeAd.icon.alt}" style="width: 48px; height: 48px; border-radius: 8px; margin-right: 12px;">
+                                 <div>
+                                     <h3 style="margin: 0; color: #333; font-size: 18px;">${nativeAd.title}</h3>
+                                     <p style="margin: 5px 0 0 0; color: #666; font-size: 12px;">Sponsored by ${nativeAd.sponsoredBy}</p>
+                                 </div>
+                             </div>
+                             
+                             <p style="margin: 0 0 15px 0; color: #555; line-height: 1.5;">${nativeAd.description}</p>
+                             
+                             <div style="display: flex; align-items: center; justify-content: space-between; margin-bottom: 15px;">
+                                 <div style="display: flex; align-items: center;">
+                                     <span style="color: #FFD700; font-size: 16px;">★</span>
+                                     <span style="margin-left: 5px; color: #666;">${nativeAd.rating} (${nativeAd.reviewCount} reviews)</span>
+                                 </div>
+                                 <div style="text-align: right;">
+                                     <span style="color: #E91E63; font-weight: bold; font-size: 18px;">${nativeAd.price}</span>
+                                     ${nativeAd.originalPrice !== nativeAd.price ? `<span style="color: #999; text-decoration: line-through; margin-left: 5px;">${nativeAd.originalPrice}</span>` : ''}
+                                 </div>
+                             </div>
+                             
+                             <div style="display: flex; align-items: center; justify-content: space-between;">
+                                 <img src="${nativeAd.brand.logo.url}" alt="${nativeAd.brand.name}" style="height: 30px;">
+                                 <button style="
+                                     background: ${nativeAd.colorScheme.primary};
+                                     color: white;
+                                     border: none;
+                                     padding: 10px 20px;
+                                     border-radius: 4px;
+                                     cursor: pointer;
+                                     font-weight: bold;
+                                 ">${nativeAd.callToAction}</button>
+                             </div>
+                             
+                             <div style="margin-top: 10px; display: flex; flex-wrap: wrap; gap: 5px;">
+                                 ${nativeAd.tags.map(tag => `<span style="background: #f0f0f0; padding: 2px 8px; border-radius: 12px; font-size: 10px; color: #666;">${tag}</span>`).join('')}
+                             </div>
+                         </div>
+                     `;
+                     
+                     adContent.innerHTML = adHtml;
+                     responseContent.innerHTML = JSON.stringify(data, null, 2);
+                     responseInfo.style.display = 'block';
+                 } else {
+                     adContent.innerHTML = `<span class="error">❌ Error: ${data.error}</span>`;
+                 }
+                
+            } catch (error) {
+                adContent.innerHTML = `<span class="error">❌ Error: ${error.message}</span>`;
+            }
+        }
+        
+        function setExample(context) {
+            document.getElementById('context').value = context;
+        }
+        
+        function clearAd() {
+            document.getElementById('ad-preview').style.display = 'none';
+            document.getElementById('response-info').style.display = 'none';
+        }
+        
+        // Auto-generate on page load
+        window.onload = function() {
+            generateAd();
+        };
+    </script>
+</body>
+</html> 

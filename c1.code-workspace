@@ -1,0 +1,11 @@
+{
+	"folders": [
+		{
+			"path": "../monai"
+		},
+		{
+			"path": "."
+		}
+	],
+	"settings": {}
+}
